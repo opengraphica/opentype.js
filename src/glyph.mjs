@@ -257,7 +257,7 @@ Glyph.prototype.getPath = function(x, y, fontSize, options, font) {
  */
 Glyph.prototype.getLayers = function(font) {
     if(!font) {
-        throw Error('The font object is required to read the colr/cpal tables in order to get the layers.');
+        throw new Error('The font object is required to read the colr/cpal tables in order to get the layers.');
     }
     return font.layers.get(this.index);
 };
@@ -268,7 +268,7 @@ Glyph.prototype.getLayers = function(font) {
  */
 Glyph.prototype.getSvgImage = function(font) {
     if(!font) {
-        throw Error('The font object is required to read the svg table in order to get the image.');
+        throw new Error('The font object is required to read the svg table in order to get the image.');
     }
     return font.svgImages.get(this.index);
 };
@@ -503,8 +503,8 @@ Glyph.prototype.toPathData = function(options, font) {
     }
 
     let usePath = useGlyph.points && options.pointsTransform ? options.pointsTransform(useGlyph.points) : useGlyph.path;
-    if(options.pathTramsform) {
-        usePath = options.pathTramsform(usePath);
+    if(options.pathTransform) {
+        usePath = options.pathTransform(usePath);
     }
 
     return usePath.toPathData(options);

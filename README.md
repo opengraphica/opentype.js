@@ -41,7 +41,7 @@ Select one of the following sources in the next example:
 
 <!-- using module declaration (need full path) -->
 <script type=module>
-import { parse } from "https://unpkg.com/opentype.js/dist/opentype.mjs";
+import { parse } from "https://unpkg.com/opentype.js/dist/opentype.module.js";
 parse(...);
 </script>
 ```
@@ -75,6 +75,17 @@ If you plan on improving or debugging opentype.js, you can:
     - **option B:** for a development server, use `npm run start` and navigate to the `/docs` folder
 - check if all still works fine with `npm run test`
 - commit and open a Pull Request with your changes. Thank you!
+
+## Maintainer Releases
+
+Releases are published from the manual [Publish package to npm](https://github.com/opentypejs/opentype.js/actions/workflows/release.yml) workflow.
+
+1. Confirm the target version, for example `1.3.5`, and make sure `master` is green.
+2. Run the workflow from `master` with `dryRun: true` and `npmDistTag: latest`.
+3. Inspect the dry-run output, especially the package version and packed files.
+4. Re-run the workflow with the same version and `dryRun: false`.
+
+The release workflow runs preflight checks, publishes to npm, then creates the matching git tag and GitHub release.
 
 ## Usage
 
@@ -231,6 +242,10 @@ Green line indicates the advance width of the glyph.
 Convert the string to a list of glyph objects.
 Note that there is no strict 1-to-1 correspondence between the string and glyph list due to
 possible substitutions such as ligatures. The list of returned glyphs can be larger or smaller than the length of the given string.
+
+#### `Font.stringToGlyphMapping()`
+Convert the given text to an array of Glyphs and associated mapping of which characters in the original text were replaced by each Glyph index.
+For example, if the font contains a ligature for "fl", `stringToGlyphMapping('fla')` would return ``[ { glyph: opentype.Glyph, replaced: [0, 1] }, { glyph: opentype.Glyph, replaced: [2] } ]`
 
 #### `Font.charToGlyph(char)`
 Convert the character to a Glyph object. Returns `null` if the glyph could not be found. Note that this function assumes that there is a one-to-one mapping between the given character and a glyph; for complex scripts, this might not be the case.

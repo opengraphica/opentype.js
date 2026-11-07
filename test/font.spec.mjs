@@ -35,6 +35,13 @@ describe('font.mjs', function() {
     });
 
     describe('Font constructor', function() {
+        it('should throw Error objects (not strings) for missing required options', function() {
+            assert.throws(
+                () => new Font({ styleName: 'Medium', unitsPerEm: 1000, ascender: 800, descender: -200 }),
+                (err) => err instanceof Error
+            );
+        });
+
         it('accept 0 as descender value', function() {
             assert.equal(font.descender, 0);
         });
@@ -260,9 +267,11 @@ describe('glyphset.mjs', function() {
 
     describe('glyph mapping', function() {
         let notoSansFont;
+        let notoEmojiFont;
 
         beforeEach(()=> {
             notoSansFont = loadSync('./test/fonts/NotoSans-Regular.ttf');
+            notoEmojiFont = loadSync('./test/fonts/noto-emoji.ttf');
         });
     
         it('maps multiple glyphs to multiple characters in the original text source', () => {
@@ -289,6 +298,12 @@ describe('glyphset.mjs', function() {
             assert.deepEqual(mapping[2].replaced, [4, 5, 6]);
             assert.equal(mapping[3].glyph.index, 73); // f
             assert.deepEqual(mapping[3].replaced, [7]);
+
+            mapping = notoEmojiFont.stringToGlyphMapping('😀😎');
+            assert.equal(mapping[0].glyph.index, 882); // 😀
+            assert.deepEqual(mapping[0].replaced, [0, 1]);
+            assert.equal(mapping[1].glyph.index, 896); // 😎
+            assert.deepEqual(mapping[1].replaced, [2, 3]);
         });
     });
 });
